@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Solution {
+public class First {
 
     private static Pair<String, String> getGammaAndEpsilon(List<List<String>> input) {
         StringBuilder gammaBuilder = new StringBuilder();
