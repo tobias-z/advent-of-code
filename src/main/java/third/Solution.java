@@ -35,20 +35,6 @@ public class Solution {
         return new Pair<>(gammaBuilder.toString(), epsilonBuilder.toString());
     }
 
-    private static int getDecimalFromBinary(String value) {
-        int answer = 0;
-        int count = 0;
-        char[] binaries = value.toCharArray();
-        for (int i = binaries.length - 1; i >= 0; --i) {
-            char binary = binaries[i];
-            if (binary == '1') {
-                answer += Math.pow(2, count);
-            }
-            count++;
-        }
-        return answer;
-    }
-
     public static void main(String[] args) {
         List<List<String>> input = TaskReader.readFile()
                 .stream()
@@ -57,8 +43,8 @@ public class Solution {
                 )
                 .collect(Collectors.toList());
         Pair<String, String> gammaAndEpsilonPair = getGammaAndEpsilon(input);
-        int gammaDecimal = getDecimalFromBinary(gammaAndEpsilonPair.getValue0());
-        int epsilonDecimal = getDecimalFromBinary(gammaAndEpsilonPair.getValue1());
+        int gammaDecimal = Integer.parseInt(gammaAndEpsilonPair.getValue0(), 2);
+        int epsilonDecimal = Integer.parseInt(gammaAndEpsilonPair.getValue1(), 2);
         System.out.println(gammaDecimal * epsilonDecimal);
     }
 
