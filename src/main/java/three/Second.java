@@ -1,4 +1,4 @@
-package third;
+package three;
 
 
 import org.javatuples.Pair;
@@ -6,6 +6,11 @@ import utils.TaskReader;
 
 import java.util.ArrayList;
 import java.util.List;
+
+enum Method {
+    OXYGEN,
+    CO2
+}
 
 public class Second {
     public static void main(String[] args) {
@@ -53,11 +58,5 @@ public class Second {
             return getValue(oneList, ++index, method);
         return getValue(zeroList, ++index, method);
     }
-
-    enum Method {
-        OXYGEN,
-        CO2
-    }
-
 
 }
