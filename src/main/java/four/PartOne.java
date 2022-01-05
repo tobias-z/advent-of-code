@@ -99,19 +99,15 @@ public class PartOne {
         }
 
         private boolean checkHorizontal(List<BoardItem> boardItem) {
-            int count = 0;
-            for (BoardItem item : boardItem) {
-                if (item.isTouched) count++;
-            }
-            return count == 5;
+            return boardItem.stream()
+                    .filter(item -> item.isTouched)
+                    .count() == 5;
         }
 
         private boolean checkVertical(int i) {
-            int count = 0;
-            for (List<BoardItem> boardItem : boardItems) {
-                if (boardItem.get(i).isTouched) count++;
-            }
-            return count == 5;
+            return boardItems.stream()
+                    .filter(boardItem -> boardItem.get(i).isTouched)
+                    .count() == 5;
         }
 
     }
