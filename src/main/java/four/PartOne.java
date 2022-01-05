@@ -22,7 +22,7 @@ public class PartOne {
         int sum = getSumOfUnmarkedNumbers(winner);
         System.out.println(sum * winningNumber);
     }
-    
+
     private static int getSumOfUnmarkedNumbers(Board board) {
         return board.boardItems.stream()
                 .flatMap(Collection::stream)
@@ -70,21 +70,18 @@ public class PartOne {
         private final List<List<BoardItem>> boardItems = new ArrayList<>();
 
         public Board(String[] boardRows) {
-            for (String col : boardRows) {
+            for (String col : boardRows)
                 boardItems.add(Arrays.stream(col.split(" "))
                         .filter(item -> !item.isEmpty())
                         .map(s -> new BoardItem(Integer.parseInt(s)))
                         .collect(Collectors.toList()));
-            }
         }
 
         private void checkNumber(int number) {
-            for (List<BoardItem> items : boardItems) {
-                for (BoardItem item : items) {
-                    if (number == item.value)
-                        item.touch();
-                }
-            }
+            boardItems.stream()
+                    .flatMap(Collection::stream)
+                    .filter(item -> number == item.value)
+                    .forEach(BoardItem::touch);
         }
 
         public boolean isFinished() {
