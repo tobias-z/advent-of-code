@@ -5,6 +5,7 @@ import utils.TaskReader;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,24 +24,21 @@ public class PartOne {
     }
     
     private static int getSumOfUnmarkedNumbers(Board board) {
-        int sum = 0;
-        for (List<BoardItem> boardItem : board.boardItems) {
-            for (BoardItem item : boardItem) {
-                if (!item.isTouched) sum+= item.value;
-            }
-        }
-        return sum;
+        return board.boardItems.stream()
+                .flatMap(Collection::stream)
+                .filter(item -> !item.isTouched)
+                .mapToInt(item -> item.value)
+                .sum();
     }
 
     private static Pair<Board, Integer> getWinnerAndWinningNumber(List<Integer> commands, List<Board> boardList) {
-        for (Integer command : commands) {
+        for (Integer command : commands)
             for (Board board : boardList) {
                 board.checkNumber(command);
                 if (board.isFinished()) {
                     return new Pair<>(board, command);
                 }
             }
-        }
         return null;
     }
 
@@ -49,14 +47,14 @@ public class PartOne {
         String[] boardStrings = new String[5];
         int count = 0;
         for (String item : inputList) {
-            if (count >= 5) {
+            if (count < 5) {
+                boardStrings[count] = item;
+                count++;
+            } else {
                 count = 0;
                 boardList.add(new Board(boardStrings));
                 boardStrings = new String[5];
-                continue;
             }
-            boardStrings[count] = item;
-            count++;
         }
         boardList.add(new Board(boardStrings));
         return boardList;
