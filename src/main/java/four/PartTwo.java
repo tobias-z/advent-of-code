@@ -1,26 +1,24 @@
 package four;
 
 import org.javatuples.Pair;
+import utils.Console;
 import utils.TaskReader;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class PartOne {
+public class PartTwo {
     public static void main(String[] args) {
         List<String> input = TaskReader.readFile();
         List<Integer> commands = getCommands(input);
         input.remove(0);
         input.remove(0);
         List<Board> boardList = createBoard(input);
-        Pair<Board, Integer> winningPair = getWinnerAndWinningNumber(commands, boardList);
+        Pair<Board, Integer> winningPair = getLastWinnerAndCommand(commands, boardList);
         Board winner = winningPair.getValue0();
         int winningNumber = winningPair.getValue1();
         int sum = getSumOfUnmarkedNumbers(winner);
-        System.out.println(sum * winningNumber);
+        Console.log(winningNumber, sum, sum * winningNumber);
     }
 
     private static int getSumOfUnmarkedNumbers(Board board) {
@@ -31,12 +29,15 @@ public class PartOne {
                 .sum();
     }
 
-    private static Pair<Board, Integer> getWinnerAndWinningNumber(List<Integer> commands, List<Board> boardList) {
+    private static Pair<Board, Integer> getLastWinnerAndCommand(List<Integer> commands, List<Board> boardList) {
+        Set<Board> finishedBoards = new HashSet<>();
         for (Integer command : commands)
             for (Board board : boardList) {
                 board.checkNumber(command);
-                if (board.isFinished()) {
-                    return new Pair<>(board, command);
+                if (board.isFinished() && !finishedBoards.contains(board)) {
+                    finishedBoards.add(board);
+                    if (finishedBoards.size() == boardList.size())
+                        return new Pair<>(board, command);
                 }
             }
         return null;
