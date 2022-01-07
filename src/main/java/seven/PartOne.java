@@ -3,7 +3,6 @@ package seven;
 import utils.TaskReader;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,19 +12,23 @@ public class PartOne {
                 .map(Integer::parseInt)
                 .collect(Collectors.toList());
 
-        int max = Collections.max(input);
-        int min = Collections.min(input);
+        int i = getMedian(input);
+        int fuel = 0;
+        for (Integer n : input)
+            fuel += Math.max(n, i) - Math.min(n, i);
 
-        int answer = 0;
-        for (int i = min; i < max; i++) {
-            int fuel = 0;
-            for (Integer n : input)
-                fuel += Math.max(n, i) - Math.min(n, i);
+        System.out.println(fuel);
+    }
 
-            if (answer == 0) answer = fuel;
-            if (fuel < answer) answer = fuel;
-        }
+    private static int getMedian(List<Integer> list) {
+        List<Integer> sorted = list
+                .stream()
+                .sorted()
+                .collect(Collectors.toList());
 
-        System.out.println(answer);
+        if (sorted.size() % 2 == 0)
+            return (sorted.get(sorted.size() / 2) + sorted.get(sorted.size() / 2 - 1)) / 2;
+
+        return sorted.get(sorted.size() / 2);
     }
 }
