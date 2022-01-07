@@ -33,12 +33,10 @@ public class PartTwo {
     private static int getDiagonalCount(int count, Coordinate one, Coordinate two) {
         try {
             int slope = (two.x - one.x) / (two.y - one.y);
-            if (slope == 1 || slope == -1)
-                if (one.y < two.y) {
-                    count = followDiagonal(one, two, count);
-                } else {
-                    count = followDiagonal(two, one, count);
-                }
+            if (slope == 1 || slope == -1) {
+                boolean b = one.y < two.y;
+                count = followDiagonal(b ? one : two, b ? two : one, count);
+            }
         } catch (ArithmeticException e) {
             // ignore
         }
