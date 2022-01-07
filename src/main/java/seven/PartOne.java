@@ -19,11 +19,9 @@ public class PartOne {
         int answer = 0;
         for (int i = min; i < max; i++) {
             int fuel = 0;
-            for (Integer n : input) {
-                int max2 = Math.max(n, i);
-                int min2 = Math.min(n, i);
-                fuel += max2 - min2;
-            }
+            for (Integer n : input)
+                fuel += Math.max(n, i) - Math.min(n, i);
+
             if (answer == 0) answer = fuel;
             if (fuel < answer) answer = fuel;
         }
