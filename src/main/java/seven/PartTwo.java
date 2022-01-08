@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class PartTwo {
     public static void main(String[] args) {
-        List<Integer> input = Arrays.stream(TaskReader.readFile().get(0).split(","))
+        List<Integer> input = Arrays.stream(TaskReader.readFile(true).get(0).split(","))
                 .map(Integer::parseInt)
                 .collect(Collectors.toList());
 
@@ -19,7 +19,7 @@ public class PartTwo {
         int answer = 0;
         for (int i = min; i < max; i++) {
             int fuel = 0;
-            for (Integer n : input) {
+            for (int n : input) {
                 int between = Math.max(n, i) - Math.min(n, i);
                 int extra = 0;
                 for (int j = 1; j < between; j++)
