@@ -22,7 +22,6 @@ public class PartTwo {
                 values.append(display.getNum(outputValue));
             }
             int parsed = Integer.parseInt(values.toString());
-            Console.log(values, "parsed", parsed);
             answer += parsed;
         }
 
@@ -32,7 +31,7 @@ public class PartTwo {
 
 
     private static List<Pair<String[], String[]>> getSignalAndOutputPair() {
-        return TaskReader.readFile(true)
+        return TaskReader.readFile()
                 .stream()
                 .map(line -> line
                         .split(" \\| ")
@@ -70,13 +69,13 @@ public class PartTwo {
 
         void createPositions() {
             String twos = possibilities.get(2).get(0);
-            correctNumberMap.put(twos, 2);
+            correctNumberMap.put(twos, 1);
             for (char c : twos.toCharArray()) {
                 addPosition(c, Position.TOP_RIGHT, Position.BOTTOM_RIGHT);
             }
 
             String threes = possibilities.get(3).get(0);
-            correctNumberMap.put(threes, 3);
+            correctNumberMap.put(threes, 7);
             for (char c : threes.toCharArray()) {
                 if (twos.contains(String.valueOf(c)))
                     addPosition(c, Position.TOP_RIGHT, Position.BOTTOM_RIGHT);
@@ -93,15 +92,22 @@ public class PartTwo {
                 addPosition(c, Position.TOP_LEFT, Position.MIDDLE);
             }
 
-            correctNumberMap.put(possibilities.get(7).get(0), 7);
+            correctNumberMap.put(possibilities.get(7).get(0), 8);
 
-            int topRightPositions = 0;
+            Set<Character> topLeft = positionSetMap.get(Position.TOP_LEFT);
+            Set<Character> middle = positionSetMap.get(Position.MIDDLE);
+            Set<Character> topRight = new HashSet<>(positionSetMap.get(Position.TOP_RIGHT));
             for (String s : possibilities.get(5)) {
-                Set<Character> topLeft = positionSetMap.get(Position.TOP_LEFT);
-                Set<Character> middle = positionSetMap.get(Position.MIDDLE);
+                int foundTopRights = 0;
+                char foundChar = 0;
                 List<Boolean> booleanList = new ArrayList<>();
                 Set<Character> usedCharSet = new HashSet<>();
                 for (char c : s.toCharArray()) {
+                    if (topRight.contains(c)) {
+                        foundTopRights++;
+                        if (foundTopRights == 1)
+                            foundChar = c;
+                    }
                     if (topLeft.contains(c) && !usedCharSet.contains(c)) {
                         booleanList.add(true);
                         usedCharSet.add(c);
@@ -110,47 +116,27 @@ public class PartTwo {
                         booleanList.add(true);
                         usedCharSet.add(c);
                     }
-
                 }
 
-                Iterator<Character> iterator = positionSetMap.get(Position.TOP_RIGHT).iterator();
-                Character character = iterator.next();
-                if (s.contains(String.valueOf(character))) {
-                    topRightPositions++;
-                    Set<Character> charValue = new HashSet<>() {
-                        {
-                            add(character);
-                        }
-                    };
-                    if (topRightPositions == 2 && booleanList.size() != 2) {
-                        // is 2
-                        correctNumberMap.put(s, 2);
-                        if (iterator.hasNext()) {
-                            positionSetMap.replace(Position.TOP_RIGHT, charValue);
-                            positionSetMap.replace(Position.BOTTOM_RIGHT, new HashSet<>() {
-                                {
-                                    add(iterator.next());
-                                }
-                            });
-                        }
-                    } else if (booleanList.size() == 2) {
-                        positionSetMap.replace(Position.TOP_RIGHT, new HashSet<>() {
-                            {
-                                add(iterator.next());
-                            }
-                        });
-                        positionSetMap.replace(Position.BOTTOM_RIGHT, charValue);
-                    }
+                if (foundTopRights == 2) {
+                    correctNumberMap.put(s, 3);
                 }
 
-                if (booleanList.size() == 2)
+                if (booleanList.size() == 2) {
                     correctNumberMap.put(s, 5);
-
+                    char finalFoundChar = foundChar;
+                    positionSetMap.replace(Position.BOTTOM_RIGHT, new HashSet<>() {
+                        {
+                            add(finalFoundChar);
+                        }
+                    });
+                    positionSetMap.get(Position.TOP_RIGHT).remove(foundChar);
+                }
             }
 
             for (String s : possibilities.get(5)) {
                 if (!correctNumberMap.containsKey(s))
-                    correctNumberMap.put(s, 3);
+                    correctNumberMap.put(s, 2);
             }
 
             char sixNext = positionSetMap.get(Position.TOP_RIGHT).iterator().next();
@@ -179,6 +165,7 @@ public class PartTwo {
                     correctNumberMap.put(val, 0);
                 } else correctNumberMap.put(val, 9);
             }
+
         }
 
         void addPosition(char c, Position... positions) {
